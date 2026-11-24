@@ -7,179 +7,140 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <script src="script.js" defer></script>
-  <div class="sunset-sky"></div>
+  <div class="sunset-glow"></div>
 
-  <div class="studio-wrap">
-    <!-- Top Header & Mode Switcher -->
-    <header class="hero-bar">
-      <div class="hero-copy">
-        <span class="eyebrow">🌅 Golden Hour Study Studio</span>
+  <div class="app-shell">
+    <header class="top-header">
+      <div>
+        <span class="badge">🌅 Sunset Study Studio</span>
         <h1>SunsetDeck</h1>
-        <p class="subtitle">Flip cards in a live carousel, add custom study notes, and generate instant quizzes.</p>
+        <p class="subtitle">Browse cards in a carousel, flip for answers, build decks, and generate quizzes.</p>
       </div>
 
-      <div class="deck-controls">
-        <label for="deck-select" class="sr-only">Choose Study Deck</label>
-        <select id="deck-select" class="deck-picker"></select>
-        <div class="mode-switch" role="tablist">
-          <button type="button" class="mode-tab active" data-mode="carousel">🎠 Carousel Study</button>
-          <button type="button" class="mode-tab" data-mode="quiz">⚡ Quiz Generator</button>
-          <button type="button" class="mode-tab" data-mode="builder">✍️ Add / Edit Cards</button>
-        </div>
+      <div class="controls-right">
+        <select id="deck-selector" class="select-input" aria-label="Select Study Deck"></select>
+
+        <nav class="tab-bar" aria-label="App Sections">
+          <button type="button" class="tab-btn active" data-view="carousel">🎠 Carousel</button>
+          <button type="button" class="tab-btn" data-view="quiz">⚡ Quiz</button>
+          <button type="button" class="tab-btn" data-view="manage">✍️ Add Cards</button>
+        </nav>
       </div>
     </header>
 
-    <!-- MODE 1: INTERACTIVE FLASHCARD CAROUSEL -->
-    <section id="view-carousel" class="mode-view active">
-      <div class="carousel-meta">
-        <span id="carousel-counter" class="pill">Card 1 of 1</span>
-        <div class="mastery-pills">
-          <span id="mastered-count" class="pill pill-mint">0 Mastered</span>
-          <span id="review-count" class="pill pill-amber">0 To Review</span>
+    <!-- VIEW 1: FLASHCARD CAROUSEL -->
+    <section id="view-carousel" class="view-panel active">
+      <div class="status-strip">
+        <span id="card-position" class="chip">Card 1 of 5</span>
+        <div class="chip-row">
+          <span id="mastered-badge" class="chip chip-sage">0 Mastered</span>
+          <span id="review-badge" class="chip chip-amber">5 To Review</span>
         </div>
       </div>
 
-      <!-- Mini Slide Strip / Carousel Dots -->
-      <div id="carousel-track-strip" class="slide-strip" aria-label="Card Slides"></div>
+      <div id="slide-dots" class="slide-dots" aria-label="Slide indicators"></div>
 
-      <!-- Main Carousel Stage -->
-      <div class="carousel-stage">
-        <button type="button" id="prev-card-btn" class="nav-arrow" aria-label="Previous Card">‹</button>
+      <div class="carousel-row">
+        <button type="button" id="prev-slide" class="arrow-btn" aria-label="Previous card">‹</button>
 
-        <div class="card-viewport">
-          <div id="flashcard-3d" class="flashcard-3d" tabindex="0" role="button" aria-label="Flip flashcard">
-            <div class="card-face card-front">
-              <div class="card-top">
-                <span id="card-topic-badge" class="topic-chip">Topic</span>
-                <span class="flip-hint">Click or press Space to flip ↻</span>
-              </div>
-              <h2 id="card-question-text" class="card-prompt"></h2>
-            </div>
-
-            <div class="card-face card-back">
-              <div class="card-top">
-                <span class="topic-chip back-chip">Answer & Explanation</span>
-                <span class="flip-hint">Click to see prompt ↻</span>
-              </div>
-              <p id="card-answer-text" class="card-answer"></p>
-            </div>
+        <div id="flashcard-box" class="flashcard-box" tabindex="0" role="button" aria-label="Flip card">
+          <div class="face-header">
+            <span id="card-tag" class="tag-pill">Algorithms</span>
+            <span id="card-side-label" class="side-label">QUESTION • Click to flip</span>
           </div>
+          <div id="card-main-content" class="face-body"></div>
         </div>
 
-        <button type="button" id="next-card-btn" class="nav-arrow" aria-label="Next Card">›</button>
+        <button type="button" id="next-slide" class="arrow-btn" aria-label="Next card">›</button>
       </div>
 
-      <!-- Study Confidence Actions -->
-      <div class="confidence-bar">
-        <button type="button" id="mark-review-btn" class="btn-outline-coral">Need Review</button>
-        <button type="button" id="flip-btn" class="btn-sunset">Flip Card</button>
-        <button type="button" id="mark-mastered-btn" class="btn-sunset-gold">Mark Mastered ✓</button>
+      <div class="button-strip">
+        <button type="button" id="btn-review" class="btn-soft">Need Review</button>
+        <button type="button" id="btn-flip" class="btn-primary">Flip Card</button>
+        <button type="button" id="btn-mastered" class="btn-gold">Mark Mastered ✓</button>
       </div>
     </section>
 
-    <!-- MODE 2: INTERACTIVE QUIZ GENERATOR -->
-    <section id="view-quiz" class="mode-view">
-      <div id="quiz-setup" class="quiz-setup-card">
-        <span class="pill">Instant Quiz Engine</span>
-        <h2>Generate a Quiz From Your Deck</h2>
-        <p class="muted-copy">
-          Turns your flashcards into multiple-choice questions automatically—pulling options from your saved cards.
-        </p>
+    <!-- VIEW 2: QUIZ GENERATOR -->
+    <section id="view-quiz" class="view-panel">
+      <div id="quiz-start-card" class="surface-card">
+        <span class="chip">Quiz Generator</span>
+        <h2>Quiz Yourself From This Deck</h2>
+        <p class="desc-text">Generates multiple-choice questions automatically from the flashcards in your selected deck.</p>
 
-        <div class="quiz-options-row">
-          <label class="field-group">
-            <span>Number of Questions</span>
-            <select id="quiz-length">
+        <div class="inline-form">
+          <label class="field">
+            <span>Questions</span>
+            <select id="quiz-count" class="select-input">
               <option value="3">3 Questions</option>
               <option value="5" selected>5 Questions</option>
               <option value="8">8 Questions</option>
             </select>
           </label>
-          <button type="button" id="generate-quiz-btn" class="btn-sunset">Generate New Quiz</button>
+          <button type="button" id="start-quiz-btn" class="btn-primary">Start Quiz</button>
         </div>
       </div>
 
-      <div id="quiz-play-area" class="quiz-play-card hidden">
-        <div class="quiz-top">
-          <span id="quiz-progress-label" class="pill">Question 1 of 5</span>
-          <span id="quiz-score-label" class="pill pill-mint">Score: 0</span>
+      <div id="quiz-active-card" class="surface-card hidden">
+        <div class="status-strip">
+          <span id="quiz-step-label" class="chip">Question 1 of 5</span>
+          <span id="quiz-score-badge" class="chip chip-sage">Score: 0</span>
         </div>
 
-        <h3 id="quiz-question-heading" class="quiz-q-text"></h3>
-        <div id="quiz-choices" class="choices-grid"></div>
+        <h3 id="quiz-prompt" class="quiz-prompt"></h3>
+        <div id="quiz-options" class="quiz-options"></div>
+        <div id="quiz-result-note" class="quiz-note hidden"></div>
 
-        <div id="quiz-feedback" class="quiz-feedback hidden"></div>
-
-        <div class="quiz-footer">
-          <button type="button" id="next-quiz-btn" class="btn-sunset hidden">Next Question →</button>
-          <button type="button" id="restart-quiz-btn" class="btn-ghost">Change Setup</button>
+        <div class="button-strip left-align">
+          <button type="button" id="next-q-btn" class="btn-primary hidden">Next Question →</button>
+          <button type="button" id="back-setup-btn" class="btn-soft">Back to Setup</button>
         </div>
       </div>
 
-      <div id="quiz-summary" class="quiz-summary-card hidden">
-        <span class="pill pill-amber">Quiz Complete</span>
-        <h2 id="final-score-title"></h2>
-        <p id="final-score-message" class="muted-copy"></p>
-        <button type="button" id="play-again-btn" class="btn-sunset">Run Another Quiz</button>
+      <div id="quiz-done-card" class="surface-card hidden">
+        <span class="chip chip-amber">Finished</span>
+        <h2 id="quiz-final-heading"></h2>
+        <p id="quiz-final-sub" class="desc-text"></p>
+        <button type="button" id="retry-quiz-btn" class="btn-primary">Play Again</button>
       </div>
     </section>
 
-    <!-- MODE 3: CARD & DECK BUILDER -->
-    <section id="view-builder" class="mode-view">
-      <div class="builder-grid">
-        <form id="new-card-form" class="builder-card">
-          <span class="pill">Add Flashcard</span>
-          <h2>Create a New Card</h2>
+    <!-- VIEW 3: ADD CARDS & DECKS -->
+    <section id="view-manage" class="view-panel">
+      <div class="two-col">
+        <form id="add-card-form" class="surface-card">
+          <span class="chip">New Flashcard</span>
+          <h2>Add a Card</h2>
 
-          <label class="field-group">
-            <span>Question / Concept</span>
-            <textarea
-              id="new-q-input"
-              rows="3"
-              placeholder="e.g., What is the time complexity of binary search?"
-              required
-            ></textarea>
+          <label class="field">
+            <span>Question</span>
+            <textarea id="input-q" rows="3" placeholder="Type your study question..." required></textarea>
           </label>
 
-          <label class="field-group">
-            <span>Answer / Key Takeaway</span>
-            <textarea
-              id="new-a-input"
-              rows="3"
-              placeholder="e.g., O(log n) on a sorted array by halving the search space each step."
-              required
-            ></textarea>
+          <label class="field">
+            <span>Answer</span>
+            <textarea id="input-a" rows="3" placeholder="Type the answer or explanation..." required></textarea>
           </label>
 
-          <label class="field-group">
-            <span>Topic Tag</span>
-            <input
-              type="text"
-              id="new-topic-input"
-              placeholder="e.g., Algorithms, OS, Java"
-              value="Study Notes"
-            />
+          <label class="field">
+            <span>Topic Label</span>
+            <input type="text" id="input-tag" placeholder="e.g., DBMS, OS, Java" value="CS Notes" />
           </label>
 
-          <button type="submit" class="btn-sunset">+ Save Flashcard</button>
+          <button type="submit" class="btn-primary">+ Add Flashcard</button>
         </form>
 
-        <div class="builder-card">
-          <span class="pill pill-amber">New Deck</span>
-          <h2>Start a Custom Deck</h2>
-          <form id="new-deck-form" class="deck-create-row">
-            <input
-              type="text"
-              id="new-deck-name"
-              placeholder="Deck title (e.g., Operating Systems)"
-              required
-            />
-            <button type="submit" class="btn-sunset-gold">Create Deck</button>
+        <div class="surface-card">
+          <span class="chip chip-amber">Decks</span>
+          <h2>Create Deck or Remove Cards</h2>
+
+          <form id="add-deck-form" class="inline-form compact">
+            <input type="text" id="input-deck-name" placeholder="New deck name..." required />
+            <button type="submit" class="btn-gold">Create</button>
           </form>
 
-          <h3 class="mini-heading">Cards in Current Deck</h3>
-          <ul id="deck-card-list" class="card-inventory"></ul>
+          <h3 class="sub-heading">Cards in Current Deck</h3>
+          <ul id="card-manager-list" class="manager-list"></ul>
         </div>
       </div>
     </section>
